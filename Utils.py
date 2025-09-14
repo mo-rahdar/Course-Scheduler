@@ -1900,9 +1900,9 @@ def run_pipeline(input_filename='Courses_info.xlsx'):
     
     # Show the status of the solution and if it is optimal or not
     result = solution.Solver._list
-    print('     Status:            ', result[0].Status)
+    print('     Status:   ', result[0].Status)
     print('     Condition:', result[0].Termination_condition)
-    print('     Time:                  %.2f seconds\n' %result[0].Time)
+    print('     Time:     %.2f seconds\n' %result[0].Time)
 
     # 3) Extract results
     print("📊 Extracting results...")
