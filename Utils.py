@@ -19,13 +19,6 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 
 
 # In[ ]:
-# input_file_path = '/content/drive/MyDrive/Colab_Notebooks/Courses_info.xlsx'
-# output_file_path_excel = '/content/drive/MyDrive/Colab_Notebooks/Schedule_results.xlsx'
-# output_file_path_schedule = '/content/drive/MyDrive/Colab_Notebooks/Schedule_results.xlsx'
-# output_file_path_conflicts = '/content/drive/MyDrive/Colab_Notebooks/Schedule_results.xlsx'
-# output_file_path_meetings = '/content/drive/MyDrive/Colab_Notebooks/Schedule_results.xlsx'
-
-# In[ ]:
 
 def what_semester(input_file_path):
 
@@ -1353,6 +1346,7 @@ def build_model(data):
 def solve_model(model):
     
     # Create a solver instance using the GLPK solver
+    # solver = SolverFactory('glpk', executable=r'C:\Users\rahda\anaconda3\Library\bin\glpsol.exe')
     solver = SolverFactory('glpk')
     
     # Set the termination limit in seconds
@@ -1864,11 +1858,31 @@ def build_check_model(data, x):
 
 # In[ ]:
 
-def save_uploaded_file(upload_widget, saved_name='Courses_info_run.xlsx'):
-    """Save uploaded FileUpload content to disk and return the filename."""
+def save_uploaded_file(upload_widget, saved_name=None, mode='scheduler'):
+    """
+    Save uploaded FileUpload content to disk and return the filename.
+    
+    Parameters
+    ----------
+    upload_widget : ipywidgets.FileUpload
+        The widget holding the uploaded file.
+    saved_name : str, optional
+        Name to save file as. If None, a default will be used based on mode.
+    mode : str, {'scheduler', 'check'}
+        Determines default saved filename if saved_name not provided.
+    """
     if not upload_widget.value:
         return None
     
+    # Determine filename
+    if saved_name is None:
+        if mode == 'scheduler':
+            saved_name = 'Courses_info_run.xlsx'
+        elif mode == 'check':
+            saved_name = 'Schedule_results_run.xlsx'
+        else:
+            raise ValueError("mode must be either 'scheduler' or 'check'")
+
     # Handle both new (tuple) and old (dict) behaviors
     if isinstance(upload_widget.value, dict):
         file_info = list(upload_widget.value.values())[0]
@@ -1882,9 +1896,10 @@ def save_uploaded_file(upload_widget, saved_name='Courses_info_run.xlsx'):
     return saved_name
 
 
+
 # In[ ]:
 
-def run_pipeline(input_filename='Courses_info.xlsx'):
+def run_pipeline(input_filename):
     """Run your scheduler pipeline and save Excel + images."""
     
     # 1) Read input
@@ -1932,3 +1947,29 @@ def run_pipeline(input_filename='Courses_info.xlsx'):
     plot_meetings(x, 'meetings.png')
 
 
+# In[ ]:
+
+def run_check_pipeline(schedule_filename, input_filename="Courses_info_run.xlsx"):
+    """Check a user-modified schedule against constraints."""
+    # Read data
+    sheetnames = what_semester(input_filename)
+    data = read_data(input_filename, sheetnames)
+
+    # Read modified schedule
+    x = read_schedule(schedule_filename)
+
+    # Build & solve check model
+    print("🔍 Checking modified schedule...")
+    check_model, check_solution = build_check_model(data, x)
+
+    y = []
+    for f, j, t in check_model.y:
+        if check_model.y[f,j,t].value == 1:
+            y.append([f, j, t])
+
+    # Plots
+    plot_schedule(x, "schedule_checked")
+    plot_conflicts(x, y, "conflicts_checked")
+    plot_meetings(x, "meetings_checked")
+
+    print("✅ Check complete. See plots above.")
