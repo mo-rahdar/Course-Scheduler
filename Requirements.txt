@@ -3,6 +3,7 @@ pandas
 matplotlib
 ipywidgets
 openpyxl
+XlsxWriter
 IPython
 pyomo
 voila
