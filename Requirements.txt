@@ -1,0 +1,8 @@
+numpy
+pandas
+matplotlib
+ipywidgets
+openpyxl
+IPython
+pyomo
+voila
