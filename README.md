@@ -11,13 +11,13 @@ Click the badges below to launch the apps directly in your browser. No installat
 
 - **Course Scheduler** → Upload course info and generate a schedule.  
 - **Schedule Checker** → Upload a modified schedule to check for conflicts.  
-  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mo-rahdar/Course-scheduler/HEAD?urlpath=voila/render/Course_Scheduling7.ipynb)
+  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mo-rahdar/Course-scheduler/HEAD?urlpath=voila/render/Course_Scheduling.ipynb)
 
 ---
 
 ## 📂 Files
 
-- `Course_Scheduling7.ipynb` → Main scheduling app  
+- `Course_Scheduling.ipynb` → Main scheduling app  
 - `Utils.py` → Helper functions (data reading, solving, plotting, etc.)  
 - `requirements.txt` → Dependencies for Binder
 - `apt.txt` → to install solver
