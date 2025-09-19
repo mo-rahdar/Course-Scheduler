@@ -6,14 +6,14 @@
 import numpy as np
 import pandas as pd
 import math
-import re
+import re, os
 from collections import defaultdict, OrderedDict
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib import colors
 import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
-from IPython.display import FileLink, Image, display
+from IPython.display import FileLink, Image, display, HTML
 import warnings
 warnings.simplefilter(action='ignore', category=UserWarning)
 
@@ -1976,4 +1976,45 @@ def run_check_pipeline(schedule_filename, input_filename="Courses_info_run.xlsx"
     plot_meetings(x, "meetings_checked")
 
     print("✅ Check complete. See plots above.")
-    
+
+# In[ ]:
+
+def create_download_link(filepath, label=None, mime=None):
+    """
+    Create and display a download link for `filepath` by embedding it as a
+    base64 data URI. Works reliably in Binder/Voila.
+    """
+    if not os.path.exists(filepath):
+        print(f"❌ File not found: {filepath}")
+        return
+
+    if label is None:
+        label = f"⬇️ Download {os.path.basename(filepath)}"
+
+    # Guess mime type if not provided
+    if mime is None:
+        ext = os.path.splitext(filepath)[1].lower()
+        if ext in ('.xlsx', '.xlsm', '.xls'):
+            mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        elif ext in ('.csv',):
+            mime = "text/csv"
+        elif ext in ('.png', '.jpg', '.jpeg'):
+            mime = f"image/{ext[1:]}"
+        else:
+            mime = "application/octet-stream"
+
+    with open(filepath, "rb") as f:
+        b = f.read()
+    b64 = base64.b64encode(b).decode()
+    href = f"data:{mime};base64,{b64}"
+    html = f'<a download="{os.path.basename(filepath)}" href="{href}">{label}</a>'
+    display(HTML(html))
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
