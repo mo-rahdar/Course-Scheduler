@@ -1979,36 +1979,18 @@ def run_check_pipeline(schedule_filename, input_filename="Courses_info_run.xlsx"
 
 # In[ ]:
 
-def create_download_link(filepath, label=None, mime=None):
+def create_download_link(filepath, label=None):
     """
     Create and display a download link for `filepath` by embedding it as a
     base64 data URI. Works reliably in Binder/Voila.
     """
     if not os.path.exists(filepath):
-        print(f"❌ File not found: {filepath}")
-        return
+        return HTML(f"<b>File not found: {filepath}</b>")
 
-    if label is None:
-        label = f"⬇️ Download {os.path.basename(filepath)}"
-
-    # Guess mime type if not provided
-    if mime is None:
-        ext = os.path.splitext(filepath)[1].lower()
-        if ext in ('.xlsx', '.xlsm', '.xls'):
-            mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        elif ext in ('.csv',):
-            mime = "text/csv"
-        elif ext in ('.png', '.jpg', '.jpeg'):
-            mime = f"image/{ext[1:]}"
-        else:
-            mime = "application/octet-stream"
-
-    with open(filepath, "rb") as f:
-        b = f.read()
-    b64 = base64.b64encode(b).decode()
-    href = f"data:{mime};base64,{b64}"
-    html = f'<a download="{os.path.basename(filepath)}" href="{href}">{label}</a>'
-    display(HTML(html))
+    filename = os.path.basename(filepath)
+    label = label or f"⬇️ Download {filename}"
+    href = f"/voila/files/{filename}"
+    return HTML(f'<a href="{href}" target="_blank" download="{filename}">{label}</a>')
 
 
 # In[ ]:
