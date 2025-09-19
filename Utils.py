@@ -1899,6 +1899,7 @@ def save_uploaded_file(upload_widget, saved_name=None, mode='scheduler'):
 
 # In[ ]:
 
+
 def run_pipeline(input_filename):
     """Run your scheduler pipeline and save Excel + images."""
     
@@ -1945,6 +1946,8 @@ def run_pipeline(input_filename):
     plot_conflicts(x, y, 'conflicts.png')
     print('\n\n\n')
     plot_meetings(x, 'meetings.png')
+    
+    return excel_out
 
 
 # In[ ]:
