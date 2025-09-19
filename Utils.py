@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 import math
-import re, os, time
+import re, os, time, io, base64
 from collections import defaultdict, OrderedDict
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -1945,13 +1945,15 @@ def run_pipeline(input_filename):
     # write_result(x, y, excel_out)
     
     df = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
-    df.to_excel(excel_out, index=False)
+    # df.to_excel(excel_out, index=False)
         
     # Small delay to ensure file is fully written
-    time.sleep(0.5)
+    # time.sleep(0.5)
     # display(FileLink(file_path, result_html_prefix="Click to download: "))
-    html_link = f'<a href="{excel_out}" download="{excel_out}">Download Excel File</a>'
-    display(HTML(html_link))
+    # html_link = f'<a href="{excel_out}" download="{excel_out}">Download Excel File</a>'
+    # display(HTML(html_link))
+
+    create_excel_download_link(df, excel_out)
 
     # Show Excel download link
     print("\n🎉 Scheduling complete.")
@@ -1967,6 +1969,37 @@ def run_pipeline(input_filename):
     print('\n\n\n')
     plot_meetings(x, 'meetings.png')
     
+
+
+def create_excel_download_link(df, filename="data.xlsx"):
+    """Create a download link using base64 encoding - works in Binder"""
+    # Create Excel file in memory
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Data')
+    
+    # Encode to base64
+    excel_data = output.getvalue()
+    b64 = base64.b64encode(excel_data).decode()
+    
+    # Create HTML download link
+    html = f'''
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6;">
+        <h4 style="margin-top: 0;">📊 Your Excel file is ready!</h4>
+        <a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" 
+           download="{filename}"
+           style="background: #28a745; color: white; padding: 12px 20px; 
+                  text-decoration: none; border-radius: 4px; display: inline-block;
+                  font-weight: bold;">
+           ⬇️ Download {filename}
+        </a>
+        <p style="margin-bottom: 0; color: #6c757d;">File will download immediately when clicked</p>
+    </div>
+    '''
+    display(HTML(html))
+
+
+
 
 # In[ ]:
 
