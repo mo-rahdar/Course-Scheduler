@@ -1361,19 +1361,6 @@ def solve_model(model):
 
     return model, solution
 
-
-# In[ ]:
-
-
-def write_result(x, y, output_file_path_excel):
-    df1 = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
-    # df2 = pd.DataFrame(y, columns=['Group', 'Course', 'Time'])
-    
-    with pd.ExcelWriter(output_file_path_excel, engine='xlsxwriter') as writer:
-        df1.to_excel(writer, sheet_name='Schedule', index=False)
-        # df2.to_excel(writer, sheet_name='y', index=False)
-
-
 # In[ ]:
 
 
@@ -1895,8 +1882,6 @@ def save_uploaded_file(upload_widget, saved_name=None, mode='scheduler'):
         f.write(content)
     return saved_name
 
-
-
 # In[ ]:
 
 
@@ -1909,9 +1894,9 @@ def run_pipeline(input_filename):
     data = read_data(input_filename, sheetnames)
 
     # 2) Build & solve
-    print("🛠️ Building the model... (this may take a moment)")
+    print("🛠️ Building the model...")
     model = build_model(data)
-    print("🧮 Solving the model...\n")
+    print("🧮 Solving the model... (this may take a moment)\n")
     model, solution = solve_model(model)
     
     # Show the status of the solution and if it is optimal or not
@@ -1926,57 +1911,36 @@ def run_pipeline(input_filename):
     for j, s, t in model.x:
         if model.x[j,s,t].value == 1:
             x.append([j,s,t])
-    for f, j, t in model.y:
-        if model.y[f,j,t].value == 1:
-            y.append([f,j,t])
 
     # 4) Write Excel + plots
-
-    # Create a temporary directory for downloads
-    # download_dir = 'downloads'
-    # if not os.path.exists(download_dir):
-    #     os.makedirs(download_dir)
-    
     print("💾 Writing results to Excel and generating plots...\n")
     excel_out = 'Schedule_results.xlsx'
-    
-    # file_path = os.path.join(download_dir, excel_out)
-    
-    # write_result(x, y, excel_out)
-    
-    df = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
-    # df.to_excel(excel_out, index=False)
-        
-    # Small delay to ensure file is fully written
-    # time.sleep(0.5)
-    # display(FileLink(file_path, result_html_prefix="Click to download: "))
-    # html_link = f'<a href="{excel_out}" download="{excel_out}">Download Excel File</a>'
-    # display(HTML(html_link))
 
-    create_excel_download_link(df, excel_out)
+    df = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
 
     # Show Excel download link
-    print("\n🎉 Scheduling complete.")
-    print("⬇️ Download the Excel results here:\n")
-   
-    # display(FileLink(file_path, result_html_prefix="Click to download: "))
+    print("🎉 Scheduling complete.\n")
+        
+    create_excel_download_link(df, excel_out)
 
-
-    print('\n🖼️ Find the scheduling plots here:\n')    
+    print('\n🖼️ Find the scheduling plots here (To download the images you want, right-click on each one and choose \"Save Image As\"):\n\n')    
     plot_schedule(x, 'schedule.png')
     print('\n\n\n')
     plot_conflicts(x, y, 'conflicts.png')
     print('\n\n\n')
     plot_meetings(x, 'meetings.png')
-    
+
+
+# In[ ]:
 
 
 def create_excel_download_link(df, filename="data.xlsx"):
     """Create a download link using base64 encoding - works in Binder"""
+    
     # Create Excel file in memory
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='Data')
+        df.to_excel(writer, index=False, sheet_name='Schedule')
     
     # Encode to base64
     excel_data = output.getvalue()
@@ -1985,10 +1949,10 @@ def create_excel_download_link(df, filename="data.xlsx"):
     # Create HTML download link
     html = f'''
     <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6;">
-        <h4 style="margin-top: 0;">📊 Your Excel file is ready!</h4>
+        <h6 style="margin-top: 0;">📊 Your Excel file is ready!</h6>
         <a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" 
            download="{filename}"
-           style="background: #28a745; color: white; padding: 12px 20px; 
+           style="background: #744c9c; color: white; padding: 6px 10px; 
                   text-decoration: none; border-radius: 4px; display: inline-block;
                   font-weight: bold;">
            ⬇️ Download {filename}
@@ -1997,8 +1961,6 @@ def create_excel_download_link(df, filename="data.xlsx"):
     </div>
     '''
     display(HTML(html))
-
-
 
 
 # In[ ]:
