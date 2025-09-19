@@ -1,0 +1,9 @@
+{
+    "VoilaConfiguration": {
+        "file_whitelist": [
+            "*\\.xlsx",
+            ".*\\.png",
+            ".*\\.pdf"
+        ]
+    }
+}
