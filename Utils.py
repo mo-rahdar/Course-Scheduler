@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 import math
-import re, os, time, io, base64
+import re, io, base64
 from collections import defaultdict, OrderedDict
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
