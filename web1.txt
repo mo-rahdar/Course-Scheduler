@@ -1,1 +1,0 @@
-https://mybinder.org/v2/gh/mo-rahdar/Course-scheduler/HEAD?urlpath=voila/render/Course_Scheduling.ipynb
