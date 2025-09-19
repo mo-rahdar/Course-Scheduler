@@ -21,6 +21,7 @@ Click the badges below to launch the apps directly in your browser. No installat
 - `Utils.py` → Helper functions (data reading, solving, plotting, etc.)  
 - `requirements.txt` → Dependencies for Binder
 - `apt.txt` → to install solver
+- `Courses.info.xlsx` → Input data
 
 ---
 
@@ -41,8 +42,8 @@ Click the badges below to launch the apps directly in your browser. No installat
 1. If you want to make manual changes:  
    - Download `Schedule_results.xlsx`.  
    - Edit it locally (e.g., swap times).  
-2. Click the **Schedule Checker** badge above.  
-3. Upload your modified `Schedule_results.xlsx`.  
+2. Upload your modified `Schedule_results.xlsx`.
+3. Click the **Check Schedule**.
 4. The system will:  
    - Validate the new schedule.  
    - Highlight any conflicts (e.g., overlapping courses).  
