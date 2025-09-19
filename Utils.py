@@ -1947,8 +1947,6 @@ def run_pipeline(input_filename):
     print('\n\n\n')
     plot_meetings(x, 'meetings.png')
     
-    return excel_out
-
 
 # In[ ]:
 
@@ -1978,46 +1976,6 @@ def run_check_pipeline(schedule_filename, input_filename="Courses_info_run.xlsx"
     print("✅ Check complete. See plots above.")
 
 # In[ ]:
-
-def create_download_link(filepath, label=None):
-    """
-    Create and display a download link for `filepath` by embedding it as a
-    base64 data URI. Works reliably in Binder/Voila.
-    """
-    if not os.path.exists(filepath):
-        return HTML(f"<b>File not found: {filepath}</b>")
-
-    filename = os.path.basename(filepath)
-    label = label or f"⬇️ Download {filename}"
-    href = f"/voila/files/{filename}"
-    return HTML(f'<a href="{href}" target="_blank" download="{filename}">{label}</a>')
-
-
-# In[ ]:
-
-def make_download_html(path, label=None, mime=None):
-    """Return an IPython HTML object with an <a download> link that embeds the file in base64.
-    Works in Voila/Binder because it does not rely on server file serving."""
-    if not os.path.exists(path):
-        return HTML(f"<b>File not found: {path}</b>")
-    label = label or f"⬇️ Download {os.path.basename(path)}"
-    with open(path, "rb") as f:
-        data = f.read()
-    if mime is None:
-        # common Excel mime
-        if path.endswith(".xlsx"):
-            mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        elif path.endswith(".xls"):
-            mime = "application/vnd.ms-excel"
-        elif path.endswith(".png"):
-            mime = "image/png"
-        else:
-            mime = "application/octet-stream"
-    b64 = base64.b64encode(data).decode()
-    href = f"data:{mime};base64,{b64}"
-    # target=_blank recommended for some browsers
-    html = f'<a download="{os.path.basename(path)}" href="{href}" target="_blank">{label}</a>'
-    return HTML(html)
 
 
 # In[ ]:
