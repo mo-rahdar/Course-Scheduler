@@ -2,6 +2,7 @@ numpy
 pandas
 matplotlib
 ipywidgets
+jupyterlab_widgets
 openpyxl
 XlsxWriter
 IPython

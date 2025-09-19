@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 import math
-import re, os
+import re, os, time
 from collections import defaultdict, OrderedDict
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -1367,11 +1367,11 @@ def solve_model(model):
 
 def write_result(x, y, output_file_path_excel):
     df1 = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
-    df2 = pd.DataFrame(y, columns=['Group', 'Course', 'Time'])
+    # df2 = pd.DataFrame(y, columns=['Group', 'Course', 'Time'])
     
     with pd.ExcelWriter(output_file_path_excel, engine='xlsxwriter') as writer:
-        df1.to_excel(writer, sheet_name='x', index=False)
-        df2.to_excel(writer, sheet_name='y', index=False)
+        df1.to_excel(writer, sheet_name='Schedule', index=False)
+        # df2.to_excel(writer, sheet_name='y', index=False)
 
 
 # In[ ]:
@@ -1860,16 +1860,16 @@ def build_check_model(data, x):
 
 def save_uploaded_file(upload_widget, saved_name=None, mode='scheduler'):
     """
-    Save uploaded FileUpload content to disk and return the filename.
+    Save the uploaded FileUpload content to disk and return the filename.
     
     Parameters
     ----------
-    upload_widget : ipywidgets.FileUpload
+    upload_widget: ipywidgets.FileUpload
         The widget holding the uploaded file.
-    saved_name : str, optional
+    saved_name: str, optional
         Name to save file as. If None, a default will be used based on mode.
-    mode : str, {'scheduler', 'check'}
-        Determines default saved filename if saved_name not provided.
+    mode: str, {'scheduler', 'check'}
+        Determines the default saved filename if saved_name is not provided.
     """
     if not upload_widget.value:
         return None
@@ -1931,14 +1931,32 @@ def run_pipeline(input_filename):
             y.append([f,j,t])
 
     # 4) Write Excel + plots
+
+    # Create a temporary directory for downloads
+    download_dir = 'downloads'
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
+    
     print("💾 Writing results to Excel and generating plots...\n")
     excel_out = 'Schedule_results.xlsx'
-    write_result(x, y, excel_out)
+    
+    file_path = os.path.join(download_dir, excel_out)
+    
+    # write_result(x, y, excel_out)
+    
+    df = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
+    df.to_excel(file_path, index=False)
+        
+    # Small delay to ensure file is fully written
+    time.sleep(0.5)
+    display(FileLink(file_path, result_html_prefix="Click to download: "))
 
     # Show Excel download link
-    print("🎉 Scheduling complete.")
+    print("\n🎉 Scheduling complete.")
     print("⬇️ Download the Excel results here:\n")
-    display(FileLink(excel_out))
+   
+    # display(FileLink(file_path, result_html_prefix="Click to download: "))
+
 
     print('\n🖼️ Find the scheduling plots here:\n')    
     plot_schedule(x, 'schedule.png')
