@@ -1933,23 +1933,25 @@ def run_pipeline(input_filename):
     # 4) Write Excel + plots
 
     # Create a temporary directory for downloads
-    download_dir = 'downloads'
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
+    # download_dir = 'downloads'
+    # if not os.path.exists(download_dir):
+    #     os.makedirs(download_dir)
     
     print("💾 Writing results to Excel and generating plots...\n")
     excel_out = 'Schedule_results.xlsx'
     
-    file_path = os.path.join(download_dir, excel_out)
+    # file_path = os.path.join(download_dir, excel_out)
     
     # write_result(x, y, excel_out)
     
     df = pd.DataFrame(x, columns=['Course', 'Section', 'Time'])
-    df.to_excel(file_path, index=False)
+    df.to_excel(excel_out, index=False)
         
     # Small delay to ensure file is fully written
     time.sleep(0.5)
-    display(FileLink(file_path, result_html_prefix="Click to download: "))
+    # display(FileLink(file_path, result_html_prefix="Click to download: "))
+    html_link = f'<a href="{excel_out}" download="{excel_out}">Download Excel File</a>'
+    display(HTML(html_link))
 
     # Show Excel download link
     print("\n🎉 Scheduling complete.")
