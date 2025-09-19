@@ -1911,6 +1911,9 @@ def run_pipeline(input_filename):
     for j, s, t in model.x:
         if model.x[j,s,t].value == 1:
             x.append([j,s,t])
+    for f, j, t in model.y:
+        if model.y[f,j,t].value == 1:
+            y.append([f,j,t])
 
     # 4) Write Excel + plots
     print("💾 Writing results to Excel and generating plots...\n")
