@@ -1698,7 +1698,7 @@ def plot_meetings(x, output_file_path_meetings, save=False):
 
 
 def read_schedule(output_file_path_excel):
-    df1 = pd.read_excel(output_file_path_excel, sheet_name='x')
+    df1 = pd.read_excel(output_file_path_excel, sheet_name='Schedule')
     x = df1.values.tolist()
     return x
 
