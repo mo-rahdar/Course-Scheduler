@@ -1995,6 +1995,47 @@ def run_check_pipeline(schedule_filename, input_filename="Courses_info_run.xlsx"
 
 # In[ ]:
 
+# --- Callbacks ---
+def on_run_clicked(b):
+    with out:
+        clear_output()
+        if not upload_input.value:
+            print("❌ Please upload an input Excel file first.")
+            return
+        try:
+            fname = Utils.save_uploaded_file(upload_input, mode='scheduler')
+            print("✅ Input file saved as:", fname)
+
+            # Run scheduler pipeline
+            result_file = Utils.run_pipeline(fname)
+
+        except Exception as e:
+            print("❌ Error during scheduling:")
+            traceback.print_exc()
+
+def on_check_clicked(b):
+    with out:
+        clear_output()
+        if not upload_input.value:
+            print("❌ Please upload the input Excel file first.")
+            return
+        if not upload_result.value:
+            print("❌ Please upload a results Excel file to check.")
+            return
+        try:
+            input_fname = Utils.save_uploaded_file(upload_input, mode='scheduler')
+            result_fname = Utils.save_uploaded_file(upload_result, mode='check')
+
+            print("✅ Files ready.")
+            print("   Input file:", input_fname)
+            print("   Results file:", result_fname)
+
+            # Run check pipeline
+            Utils.run_check_pipeline(result_fname, input_filename=input_fname)
+
+        except Exception as e:
+            print("❌ Error during check:")
+            traceback.print_exc()
 
 # In[ ]:
 
